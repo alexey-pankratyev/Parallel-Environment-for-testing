@@ -1,0 +1,7 @@
+source :rubygems
+
+gem 'redis'
+gem 'hiredis', '~>0.6.1'
+gem 'pg', '~>0.17.1'
+gem 'mysql2', '~>0.3.16'
+

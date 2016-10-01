@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jenkins-app
+  labels:
+    app: jenkins-app
+    heritage: helm
+spec:
+  template:
+    metadata:
+      labels:
+        app: jenkins-app
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+      - name: jenkins-app
+        image: rezeter/rubyjenkins
+        ports:
+        - containerPort: 8080
+        - containerPort: 50000
+        volumeMounts:
+            - name: jenkins-vol
+              mountPath: /var/jenkins_home
+      volumes:
+        - name: jenkins-vol
+          awsElasticBlockStore:
+            volumeID: vol-f925d77f
+            fsType: ext4
+#          hostPath:
+#          #            path: /mnt/master-pd/data-pod
+#

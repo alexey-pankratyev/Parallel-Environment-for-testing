@@ -1,0 +1,8 @@
+alias ghist='history|grep $1'
+alias ll='ls -la'
+if [ -s "~/.rvm/scripts/rvm" ] ; then
+      . "~/.rvm/scripts/rvm"
+    elif [ -s "/usr/local/rvm/scripts/rvm" ] ; then
+      . "/usr/local/rvm/scripts/rvm"
+fi
+
