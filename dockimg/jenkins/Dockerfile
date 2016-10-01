@@ -41,7 +41,6 @@ RUN /bin/bash -lc "rvm requirements"
 # Add jenkins to rvm group
 RUN usermod -a -G rvm jenkins
 
-#USER jenkins 
 # Install Ruby
 RUN /bin/bash -lc  "rvm install $RUBY_VERSION  && rvm use $RUBY_VERSION --default"
 
@@ -65,4 +64,10 @@ RUN mkdir /var/log/jenkins \
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/man/?? /usr/share/man/??_*
 RUN source /root/.bashrc
 RUN source /etc/profile.d/rvm.sh
+# set right for jenkins at  home
 RUN [ -d /var/jenkins_home ]  && chown -R jenkins:jenkins /var/jenkins_home || echo "not"
+# postgres autostart and start
+RUN update-rc.d postgresql enable
+RUN /etc/init.d/postgresql start
+# change pass postgress
+RUN sudo -u postgres psql -c "ALTER USER postgres PASSWORD '';"
