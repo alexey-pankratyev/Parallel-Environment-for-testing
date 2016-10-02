@@ -8,7 +8,7 @@ USER root
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 # Install essentials packages
-# RUN apt-get update && apt-get install DEBIAN_FRONTEND=noninteractive install -yq build-essential curl gnupg git vim
+RUN curl -sL https://deb.nodesource.com/setup_0.12 |  bash -
 
 RUN apt-get update -q \
     && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
@@ -17,14 +17,15 @@ RUN apt-get update -q \
       libssl-dev \
       gnupg \
       git \
-      ruby-all-dev \
-      ruby-dev \
       vim \
       sudo \
+      locales-all \
       bison \
       zlib1g-dev \
       libxml2-dev \
       libpq-dev \
+      ruby-dev \
+      libgtkmm* \
       libmysqlclient-dev \
       git-core \
       postgresql-9.4 \
@@ -68,6 +69,4 @@ RUN source /etc/profile.d/rvm.sh
 RUN [ -d /var/jenkins_home ]  && chown -R jenkins:jenkins /var/jenkins_home || echo "not"
 # postgres autostart and start
 RUN update-rc.d postgresql enable
-RUN /etc/init.d/postgresql start
-# change pass postgress
-RUN sudo -u postgres psql -c "ALTER USER postgres PASSWORD '';"
+RUN /etc/init.d/postgresql start && sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'test';"
