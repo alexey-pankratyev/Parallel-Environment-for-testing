@@ -1,9 +1,14 @@
 source :rubygems
 
+##############################################
+# These gems for scripts  
+gem 'redis-queue'
 gem 'redis'
 gem 'hiredis', '~>0.6.1'
-#gem 'mysql2', '~>0.3.16'
+gem 'trollop'
 
+##############################################
+#These gems for project
 ruby "1.9.3"
 gem "pg_search"
 gem "mail"
