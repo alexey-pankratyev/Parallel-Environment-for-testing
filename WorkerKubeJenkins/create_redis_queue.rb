@@ -16,19 +16,23 @@ class CrQueue
 
       it is very important to use the need to:
             create_redis_queue.rb [options]
-      To create a queue with the tests you need to use a parameters: :fnumber, :pathtest and :pattern
+      To create a queue with the tests you need to use a parameters:
+      :redis_host, :redis_port, :fnumber, :pathtest and :pattern
       where [options] are:
       EOS
         opt :fnumber, "with the number of test files to run in a single container", :type => :integer
         opt :pathtest, "path to files test in project", :type => :string
         opt :pattern, "file search pattern", :type => :string
+        opt :redis_host, "redis hostname", :type => :string
+        opt :redis_port, "redis port", :type => :integer
       end
 
       # check option
-      Trollop::die "Need fill parameter :fnamber, :pathtest, :pattern ! See create_redis_queue.rb -h" unless @@opts[:pathtest] && @@opts[:pattern] && @@opts[:fnumber]
+      Trollop::die "Need fill parameter :fnamber, :pathtest, :pattern ! See create_redis_queue.rb -h" unless  @@opts[:redis_host] &&  @@opts[:redis_port] && @@opts[:pathtest] && @@opts[:pattern] && @@opts[:fnumber]
 
 
-      # initialize a variable for the connection of redis
+      # initialize a variable
+
       def initializes
       end
 
@@ -36,7 +40,7 @@ class CrQueue
       def conRed
         begin
             puts "Connecting to Redis..."
-            @redis = Redis.new( host: "localhost", port: 6379)
+            @redis = Redis.new( host: @@opts[:redis_host].chomp, port: @@opts[:redis_port])
             @redis.ping
         rescue Errno::ECONNREFUSED => e
             puts "Error: Redis server unavailable. Shutting down..."
@@ -93,7 +97,7 @@ class CrQueue
       end
 
 end
-
+# run programm
 if __FILE__ == $0
     data=CrQueue.new
     data.createQueue
