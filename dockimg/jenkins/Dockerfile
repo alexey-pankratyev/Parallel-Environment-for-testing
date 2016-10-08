@@ -51,7 +51,6 @@ RUN echo "gem: --no-rdoc --no-ri" >> /root/.gemrc
 # Install bundler
 RUN /bin/bash -lc  "gem install bundler -no-doc --no-ri"
 ADD ./utils/Gemfile /root/Gemfile
-
 RUN  /bin/bash -lc  "bundle install --gemfile=/root/Gemfile"
 RUN echo 'export rvm_prefix="$HOME"' > /root/.rvmrc && echo 'export rvm_path="$HOME/.rvm"' >> /root/.rvmrc
 ADD ./utils/bashrc_rvm /root/.bashrc
@@ -65,8 +64,14 @@ RUN mkdir /var/log/jenkins \
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/man/?? /usr/share/man/??_*
 RUN source /root/.bashrc
 RUN source /etc/profile.d/rvm.sh
+
 # set right for jenkins at  home
 RUN [ -d /var/jenkins_home ]  && chown -R jenkins:jenkins /var/jenkins_home || echo "not"
+
+# copy scripts
+COPY ./WorkerKubeJenkins/create_redis_queue.rb /root/create_redis_queue.rb
+COPY ./WorkerKubeJenkins/streamproc_runtests.rb /root/streamproc_runtests.rb
+
 # postgres autostart and start
 RUN update-rc.d postgresql enable
 RUN /etc/init.d/postgresql start && sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'test';"

@@ -62,7 +62,7 @@ class CrQueue
               next
             end
           else
-            if File.fnmatch(pattern,File.basename(path))
+            if File.fnmatch(pattern,File.basename(path)) && File.basename(path) !~ /factories.rb/
               dt << File.absolute_path(path)
             end
           end
@@ -85,13 +85,14 @@ class CrQueue
         # connect to redis
         conRed
 
-        # create a list of radis
+        # create a list of redis
         queue = Redis::Queue.new('queue_tests', 'tests',  redis: @redis)
         # delete old list queue_tests
         queue.clear true
         # write our test files in it
         listFt.each_slice(@@opts[:fnumber]) do |s|
-          queue << s.to_s
+          queue << s.join(" ")
+          #.gsub(/^\"|\"$/,'')
         end
 
       end
