@@ -1,4 +1,4 @@
-#!/home/av.pankratev/.rvm/rubies/ruby-1.9.3-p551/bin/ruby
+#!/usr/bin/ruby
 # coding: utf-8
 
 require 'rubygems'
@@ -30,6 +30,7 @@ class TrQueue
       # initialize a variable
 
       def initializes
+      	@flproject="testResult.txt"
       end
 
       # method connect to redis server
@@ -50,14 +51,20 @@ class TrQueue
 
         # connect to redis
         conRed
-
+        # prepare project
+        %x{ /etc/init.d/postgresql start }
+        %x{ bundle install }
+	%x{ bundle exec rake db:setup }
+        %x{ bundle exec rake db:test:prepare }
         # create a list of redis
         @queue = Redis::Queue.new('queue_tests', 'tests',  redis: @redis)
         # run tests from posts redis
         @queue.process(true) do |message|
             ex="#{@@opts[:test_tool]} #{message}"
-            puts(%x{ #{ex} })
-            sleep 1
+            File.open(@flproject, 'a') do |f|
+                tres=%x{ #{ex} } 
+            	f.write( puts(tres) )
+            end            
         end
 
       end
@@ -68,3 +75,4 @@ if __FILE__ == $0
     data=TrQueue.new
     data.getMessage
 end
+

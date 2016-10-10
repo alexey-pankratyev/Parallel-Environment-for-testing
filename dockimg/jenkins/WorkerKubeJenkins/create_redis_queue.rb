@@ -1,4 +1,4 @@
-#!/home/av.pankratev/.rvm/rubies/ruby-1.9.3-p551/bin/ruby
+#!/usr/bin/ruby
 # coding: utf-8
 
 require 'rubygems'

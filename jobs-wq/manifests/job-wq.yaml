@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-wq
+spec:
+  parallelism: 2
+  template:
+    metadata:
+      name: job-wq	
+    spec:
+      containers:
+      - name: "job-redis"
+        image:  "rezeter/jenkins-slave-rvm-postgres94:latest"
+        command: ["source", "/root/.bashrc"]
+        command: ["/bin/bash", "-l", "-c", "$(rvm use 1.9.3)"]
+        command: ["printenv"]
+        volumeMounts:
+            - name: project
+              mountPath:  /home/jenkins/
+      volumes:
+       - name: project
+         persistentVolumeClaim:
+          claimName: diskcl	
+      restartPolicy: OnFailure

@@ -72,6 +72,9 @@ RUN [ -d /var/jenkins_home ]  && chown -R jenkins:jenkins /var/jenkins_home || e
 COPY ./WorkerKubeJenkins/create_redis_queue.rb /root/create_redis_queue.rb
 COPY ./WorkerKubeJenkins/streamproc_runtests.rb /root/streamproc_runtests.rb
 
+# setup kubectl 
+RUN curl -O https://storage.googleapis.com/kubernetes-release/release/v1.3.6/bin/linux/amd64/kubectl && chmod +x kubectl && mv kubectl /usr/local/bin/kubectl
+
 # postgres autostart and start
 RUN update-rc.d postgresql enable
 RUN /etc/init.d/postgresql start && sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'test';"
